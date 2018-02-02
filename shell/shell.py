@@ -1,6 +1,5 @@
 from system.system import *
 from system.path import Path
-# import system.system
 
 import os
 

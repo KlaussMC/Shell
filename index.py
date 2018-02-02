@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 from shell.shell import *
 
 root = Tk()
@@ -34,12 +34,12 @@ def updateOutput():
 	# global Lines
 	# global Main
 	# Main.destroy()
-    #
+	#
 	# Main = Frame(background='#151515')
 	# Main.grid(row=0, column=0, sticky=N+S+W+E)
-    #
+	#
 	# Main.grid_columnconfigure(0, weight=1)
-    #
+	#
 	# for i in range(len(Lines)):
 	# 	Main.grid_rowconfigure(i, weight=1)
 	# 	Lines[i].grid(row=i, column=0, sticky=N+W)
@@ -55,35 +55,35 @@ def updateOutput():
 		Lines[i].grid(row=1, column=0, sticky=N+W)
 
 def keyup(e):
-    global ctrlKey
-    global shiftKey
-    global altKey
-    key = e.keycode
+	global ctrlKey
+	global shiftKey
+	global altKey
+	key = e.keycode
 
-    if (key == 16):
-        shiftKey = False
-    if (key == 17):
-        ctrlKey = False
-    if (key == 18):
-        altKey = False
+	if (key == 16):
+		shiftKey = False
+	if (key == 17):
+		ctrlKey = False
+	if (key == 18):
+		altKey = False
 
 def keydown(e):
-    global ctrlKey
-    global shiftKey
-    global altKey
-    key = e.keycode
+	global ctrlKey
+	global shiftKey
+	global altKey
+	key = e.keycode
 
-    global Lines
-    if (key == 13):
+	global Lines
+	if (key == 13):
 		l = Label(Main, text=loop(line.get()), background="#333", foreground="#eee", font=("Consolas", 14))
 		# l.grid(row=(len(Lines) - 1), column=0, sticky=N+W)
 		Lines.append(l)
 		updateOutput()
 
 def resetKeys():
-    shiftKey = False
-    altKey = False
-    ctrlKey = False
+	shiftKey = False
+	altKey = False
+	ctrlKey = False
 
 root.bind("<KeyPress>", keydown)
 root.bind("<KeyRelease>", keyup)
