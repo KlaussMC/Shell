@@ -1,0 +1,12 @@
+:: verbose
+
+var elf = 10;
+
+out "Hello World: " elf;
+
+> name()
+    var arse = "toot";
+    out arse
+<;
+
+name (  )
