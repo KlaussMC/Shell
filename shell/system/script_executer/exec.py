@@ -16,52 +16,60 @@ _cmds = []
 output = ""
 
 verbose = False
-
-def Code(_str, scope=0):
+done = False
+loop = 0
+def Code(_str, rptnum, scope=0):
+    global loop
     global _vars
     global _coms
     global _lbls
     global _cmds
     global verbose
 
-    if (len(_str) > 7):
-        if ("verbose" in _str[:7]):
-            verbose = True
-        else:
-            verbose = False
+    if (loop <= rptnum):
+        if (len(_str) > 7):
+            if ("verbose" in _str[:7]):
+                verbose = True
+            else:
+                verbose = False
 
-    _coms = re.split("; |\n|;", _str)
-    # _coms = _str.split(";")
+        _coms = re.split("; |\n|;", _str)
+        # _coms = _str.split(";")
 
-    # print len(_coms)
-    _coms = filter(None, _coms)
-    # print len(_coms)
+        # print len(_coms)
+        _coms = filter(None, _coms)
+        # print len(_coms)
 
-    startPos = None
-    endPos = None
+        startPos = None
+        endPos = None
 
-    for i in range(len(_coms)):
+        for i in range(len(_coms)):
 
-        if (_coms[i][0] == ">"):
-            startPos = i
+            if (_coms[i][0] == ">"):
+                startPos = i
 
-        elif(_coms[i][0] == "<"):
-            endPos = i
+            elif(_coms[i][0] == "<"):
+                endPos = i
 
-        if (startPos != None and endPos != None):
-            name = _coms[startPos][2:_coms[startPos].index("(")]
-            _lbls.append(Label(name, _coms[startPos + 1:endPos]))
+            if (startPos != None and endPos != None):
+                name = _coms[startPos][2:_coms[startPos].index("(")]
+                _lbls.append(Label(name, _coms[startPos + 1:endPos]))
 
-            # _cmds[i] = Label(name, _coms[startPos + 1:endPos])
-            # _cmds = _coms[:startPos] + _coms[endPos:]
+                # _cmds[i] = Label(name, _coms[startPos + 1:endPos])
+                # _cmds = _coms[:startPos] + _coms[endPos:]
 
-            startPos = None
-            endPos = None
+                startPos = None
+                endPos = None
 
-        elif (startPos == None and endPos == None):
-            _cmds.append(_coms[i])
+            elif (startPos == None and endPos == None):
+                _cmds.append(_coms[i])
 
-    _int(scope)
+        _int(scope)
+
+    else:
+        loop = 0
+        return
+
     if (output != None):
         out = output.split("\n")
         # out = out[1:]
@@ -81,9 +89,15 @@ def _int(scope):
     global _vars
     global verbose
 
+    global done
+
     if (verbose):
         print(_cmds)
 
+    a = 0
+
+    # while a < len(_cmds):
+    #     i = _cmds[a]
     for i in _cmds:
         if (i != "\n"):
             if (isinstance(i, Label)):
@@ -167,6 +181,16 @@ def _int(scope):
                                 continue
                     output += "\n" + str_
 
+                elif (isLabel(_cmnd)):
+                    l = getLabel(_cmnd)
+                    # if (Code(l.get(), 1, l) == True):
+                        # continue
+
+                    try:
+                        Code(l.get(), 1, l)
+                    except:
+                        continue
+
                 elif (_cmnd == "var"):
                     if (scope == 0):
                         _vars.append(Var(fmt[0], fmt[2]))
@@ -179,11 +203,6 @@ def _int(scope):
                         else:
                             print("var created: " + scope._vars[len(scope._vars) - 1].name + ": " + scope.getVar(scope._vars[len(scope._vars) - 1].name))
 
-                elif (isLabel(_cmnd)):
-                    callLabel(_cmnd)
-                    # print
-
-
                 elif ("::" in _cmnd):
                     continue
 
@@ -192,6 +211,7 @@ def _int(scope):
                         print("The command " + _cmnd + " is not a variable name, label call or a command")
                     else:
                         print("unknown command " + _cmnd)
+    # a += 1
 
 class code_error:
     types = ["TypeError", "SyntaxError", "MathError", "VarError"]
@@ -231,14 +251,26 @@ def isLabel(name):
     if (matches == 0):
         return False
 
-def callLabel(name):
+def getLabel(name):
     global _lbls
+    matches = 0
+    for i in _lbls:
+        if (name == i.name):
+            matches += 1
+            return i
+
+    if (matches == 0):
+        return False
+
+def callLabel(name):
+    global _lbls, done
     matches = 0
     for i in _lbls:
         if (name == i.name):
             matches += 1
 
             Code(i.get(), i)
+
 
     if (matches == 0):
         err = code_error("VarError", "The Specified Label does not exist on the global scope")

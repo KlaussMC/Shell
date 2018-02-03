@@ -4,9 +4,10 @@ var elf = 10;
 
 out "Hello World: " elf;
 
+
 > name()
     var arse = "toot";
-    out arse
+    out arse;
 <;
 
-name (  )
+name ();
