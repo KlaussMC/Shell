@@ -183,13 +183,10 @@ def _int(scope):
 
                 elif (isLabel(_cmnd)):
                     l = getLabel(_cmnd)
-                    # if (Code(l.get(), 1, l) == True):
-                        # continue
 
-                    try:
-                        Code(l.get(), 1, l)
-                    except:
-                        continue
+                    break
+                    Code(l.get(), 1, l)
+                    continue
 
                 elif (_cmnd == "var"):
                     if (scope == 0):
