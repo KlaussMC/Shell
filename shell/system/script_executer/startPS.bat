@@ -1,1 +1,1 @@
-start powershell.exe -noexit -command "cd '%~dp0'
+start powershell.exe -noexit -command "cd '%~dp0'"

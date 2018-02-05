@@ -17,14 +17,18 @@ output = ""
 
 verbose = False
 done = False
+interruptLoc = 0
 loop = 0
-def Code(_str, rptnum, scope=0):
+def Code(_str, rptnum, scope=None, resume=None): #rptnum is repeatNumber, resume is where to resume
     global loop
     global _vars
     global _coms
     global _lbls
     global _cmds
     global verbose
+
+    if not scope:
+        scope = 0
 
     if (loop <= rptnum):
         if (len(_str) > 7):
@@ -82,14 +86,21 @@ def Code(_str, rptnum, scope=0):
                     print(STR.trim(op))
         print("")
 
-def _int(scope):
+def _int(s):
     global output
 
     global _cmds
     global _vars
     global verbose
+    global interruptLoc
 
     global done
+
+    scope = None
+    if (s == None):
+        scope = 0
+    else:
+        scope = s
 
     if (verbose):
         print(_cmds)
@@ -98,7 +109,8 @@ def _int(scope):
 
     # while a < len(_cmds):
     #     i = _cmds[a]
-    for i in _cmds:
+    for a in range(len(_cmds)):
+        i = _cmds[a]
         if (i != "\n"):
             if (isinstance(i, Label)):
                 if (verbose):
@@ -184,12 +196,13 @@ def _int(scope):
                 elif (isLabel(_cmnd)):
                     l = getLabel(_cmnd)
 
+                    # break
+                    interruptLoc = a + 1
+                    callLabel(_cmnd)
                     break
-                    Code(l.get(), 1, l)
-                    continue
 
                 elif (_cmnd == "var"):
-                    if (scope == 0):
+                    if (scope == 0 or scope == None):
                         _vars.append(Var(fmt[0], fmt[2]))
                     else:
                         scope._vars.append(Var(fmt[0], fmt[2]))
@@ -208,6 +221,8 @@ def _int(scope):
                         print("The command " + _cmnd + " is not a variable name, label call or a command")
                     else:
                         print("unknown command " + _cmnd)
+
+        # print a
     # a += 1
 
 class code_error:
@@ -260,14 +275,21 @@ def getLabel(name):
         return False
 
 def callLabel(name):
-    global _lbls, done
+    global _lbls, done, interruptLoc
     matches = 0
+    lbl = None
     for i in _lbls:
         if (name == i.name):
             matches += 1
+            if (lbl == None):
+                lbl = i
+            else:
+                lbl = None
 
-            Code(i.get(), i)
-
+    try:
+        Code(lbl.get(), lbl)
+    except:
+        Code(open("testScript.src").read(), 0, interruptLoc)
 
     if (matches == 0):
         err = code_error("VarError", "The Specified Label does not exist on the global scope")
