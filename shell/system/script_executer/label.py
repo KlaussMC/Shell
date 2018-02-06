@@ -3,12 +3,14 @@ class Label:
     code = ""
 
     _vars = []
+    _args = []
 
-    def __init__(self, name, code):
+    def __init__(self, name, code, args=[]):
         self.name = name
         for i in range(len(code)):
             # if (i > 1):
             self.code += code[i] + "\n"
+        self.args = args
             # else:
                 # self.code += code[i]
 

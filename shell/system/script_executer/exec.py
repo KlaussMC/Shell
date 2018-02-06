@@ -27,7 +27,7 @@ def Code(_str, rptnum, scope=None, resume=None): #rptnum is repeatNumber, resume
     global _cmds
     global verbose
 
-    if not scope:
+    if not isinstance(scope, Label):
         scope = 0
 
     if (loop <= rptnum):
@@ -53,7 +53,8 @@ def Code(_str, rptnum, scope=None, resume=None): #rptnum is repeatNumber, resume
                 startPos = i
 
             elif(_coms[i][0] == "<"):
-                endPos = i
+                if (startPos != 0):
+                    endPos = i
 
             if (startPos != None and endPos != None):
                 name = _coms[startPos][2:_coms[startPos].index("(")]
@@ -159,7 +160,8 @@ def _int(s):
 
                             formatted = tmp
 
-                # strings have been filtered and has not replaced the original words, in addition, a new instance of the string class takes the place of the string that was once the formatted string.
+                # strings have been filtered and has not replaced the original words, in addition,
+                # a new instance of the string class takes the place of the string that was once the formatted string.
                 #however, the son of a bitch is being stubborn and won't work when I request a variable, the var returns Null and I get an error.
                 #life suxxx
 
@@ -207,6 +209,7 @@ def _int(s):
                     else:
                         scope._vars.append(Var(fmt[0], fmt[2]))
 
+
                     if (verbose):
                         if (scope == 0):
                             print("var created: " + _vars[len(_vars) - 1].name + ": " + getVar(_vars[len(_vars) - 1].name))
@@ -224,6 +227,7 @@ def _int(s):
 
         # print a
     # a += 1
+    return
 
 class code_error:
     types = ["TypeError", "SyntaxError", "MathError", "VarError"]
@@ -289,7 +293,7 @@ def callLabel(name):
     try:
         Code(lbl.get(), lbl)
     except:
-        Code(open("testScript.src").read(), 0, interruptLoc)
+        Code(open("testScript.src").read(), 0, 0, interruptLoc)
 
     if (matches == 0):
         err = code_error("VarError", "The Specified Label does not exist on the global scope")
