@@ -8,11 +8,9 @@ class Label:
     def __init__(self, name, code, args=[]):
         self.name = name
         for i in range(len(code)):
-            # if (i > 1):
-            self.code += code[i] + "\n"
+            newStr = code[i]+"\n"
+            self.code += newStr.lstrip()
         self.args = args
-            # else:
-                # self.code += code[i]
 
     def get(self):
         return self.code

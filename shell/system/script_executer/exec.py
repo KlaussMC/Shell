@@ -19,7 +19,8 @@ verbose = False
 done = False
 interruptLoc = 0
 loop = 0
-def Code(_str, rptnum, scope=None, resume=None): #rptnum is repeatNumber, resume is where to resume
+
+def Code(_str, rptnum, scope=0, resume=0): #rptnum is repeatNumber, resume is where to resume
     global loop
     global _vars
     global _coms
@@ -69,7 +70,7 @@ def Code(_str, rptnum, scope=None, resume=None): #rptnum is repeatNumber, resume
             elif (startPos == None and endPos == None):
                 _cmds.append(_coms[i])
 
-        _int(scope)
+        _int(scope, resume)
 
     else:
         loop = 0
@@ -87,7 +88,7 @@ def Code(_str, rptnum, scope=None, resume=None): #rptnum is repeatNumber, resume
                     print(STR.trim(op))
         print("")
 
-def _int(s):
+def _int(s, resume=0):
     global output
 
     global _cmds
@@ -108,9 +109,7 @@ def _int(s):
 
     a = 0
 
-    # while a < len(_cmds):
-    #     i = _cmds[a]
-    for a in range(len(_cmds)):
+    for a in range(resume, len(_cmds)):
         i = _cmds[a]
         if (i != "\n"):
             if (isinstance(i, Label)):
@@ -188,9 +187,9 @@ def _int(s):
                         else:
                             try:
                                 if (scope == 0):
-                                    str_ += getVar(fmt[w])
+                                    str_ += getVar(fmt[w]).replace("\"", "")
                                 else:
-                                    str_ += scope.getVar(fmt[w])
+                                    str_ += scope.getVar(fmt[w]).replace("\"", "")
                             except:
                                 continue
                     output += "\n" + str_
@@ -199,7 +198,7 @@ def _int(s):
                     l = getLabel(_cmnd)
 
                     # break
-                    interruptLoc = a + 1
+                    interruptLoc = a
                     callLabel(_cmnd)
                     break
 
@@ -280,23 +279,8 @@ def getLabel(name):
 
 def callLabel(name):
     global _lbls, done, interruptLoc
-    matches = 0
-    lbl = None
-    for i in _lbls:
-        if (name == i.name):
-            matches += 1
-            if (lbl == None):
-                lbl = i
-            else:
-                lbl = None
 
-    try:
-        Code(lbl.get(), lbl)
-    except:
-        Code(open("testScript.src").read(), 0, 0, interruptLoc)
-
-    if (matches == 0):
-        err = code_error("VarError", "The Specified Label does not exist on the global scope")
+    Code(getLabel(name).get(), 0, getLabel(name), interruptLoc + 1)
 
 def getVarObj(varName):
     global _vars

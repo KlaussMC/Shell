@@ -1,12 +1,14 @@
 :: verbose
 
-var elf = 10;
+var elf = 9;
 
 out "Hello World: " elf;
 
-> name()
-    var variable = "toot";
-    out variable;
+> Label()
+    var nonce = "I am a nonce"
+    out nonce "But you know that"
 <;
 
-name ();
+out nonce
+
+Label ()

@@ -3,7 +3,7 @@ class string:
 
     def __init__(self, val):
         self.val = val
-        # print "val: " + self.val
+        
 
     def get(self):
         return self.val
