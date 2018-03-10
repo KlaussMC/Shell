@@ -192,7 +192,7 @@ def _int(s, resume=0):
                                     str_ += scope.getVar(fmt[w]).replace("\"", "")
                             except:
                                 continue
-                    output += "\n" + str_
+                    output += "\n" + str_.replace("\"", "")
 
                 elif (isLabel(_cmnd)):
                     l = getLabel(_cmnd)
@@ -214,6 +214,8 @@ def _int(s, resume=0):
                             print("var created: " + _vars[len(_vars) - 1].name + ": " + getVar(_vars[len(_vars) - 1].name))
                         else:
                             print("var created: " + scope._vars[len(scope._vars) - 1].name + ": " + scope.getVar(scope._vars[len(scope._vars) - 1].name))
+                elif (isVar(_cmnd)):
+                    
 
                 elif ("::" in _cmnd):
                     continue
@@ -240,20 +242,31 @@ class code_error:
         else:
             print(self.errType+ ": " + msg)
 
+def isVar(varName):
+    global _vars
+
+    matches = 0
+    for i in _vars:
+        if (i.name == varName):
+            matches += 1
+            return True
+
+    if (varName != ""):
+        if (matches == 0):
+            return False
+
 def getVar(varName):
     global _vars
 
-    # matches = 0
+    matches = 0
     for i in _vars:
         if (i.name == varName):
-            # matches += 1
+            matches += 1
             return i.get()
 
-    # if (matches == 0):
-    #     try:
-    #         err = code_error("VarError", "The Variable " + varName + " Does not exist")
-    #     except:
-    #         err = code_error("TypeError", "The input " + varName.get() + " is not a variable")
+    if (varName != ""):
+        if (matches == 0):
+            print("The variable \"" + varName + "\" does not exist")
 
 def isLabel(name):
     global _lbls
@@ -299,4 +312,4 @@ def getVarObj(varName):
 
 # Code calls main Loop. 0 defines Scope and the open request instructs what really needs to executed. this can (should be able to be) replaced by a string of code stored in a label class.
 #Now scope is defined last.
-Code(open("testScript.src").read(), 0)
+Code(open("testScript.arcs").read(), 0)
