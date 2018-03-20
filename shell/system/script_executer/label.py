@@ -19,3 +19,7 @@ class Label:
         for i in self._vars:
             if (i.name == varName):
                 return i.get()
+
+
+    def getType(self):
+        return "label"

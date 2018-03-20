@@ -1,21 +1,2 @@
-:: verbose
-
-:: Comment
-
-var Value = "String"
-out "concatenated" Value "to string"
-
-> Label()
-out "Label 1"
-<;
-
-out "Jelly flop!"
-
-> Label2()
-out "Label 2"
-<;
-
-Label ()
-Label2 ()
-
-out "Post Label Call"
+var testVar = 10
+out testVar

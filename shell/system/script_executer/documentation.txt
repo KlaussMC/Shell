@@ -1,0 +1,19 @@
+arcs documentation:
+
+if beginning of file is "verbose", will print verbose error handling things
+
+to create var, type var followed by var name, '=' char and the Value
+
+strings must be surrounded by DOUBLE quotes
+
+to print value, type 'out' followed by value to print. concatenate, simply add variable name and string seperated by space
+
+to create a label, use this syntax:
+
+    '> LabelName()'
+    ':: content'
+    '<;'
+
+call label by typing label name with '()' must be seperated by spaces
+
+comment by using '::'
